@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>«Алтын барыс» ісі</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&family=PT+Mono&family=PT+Sans:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: тергеушінің үстелі. Жасыл мата үстінде папка, ішінде қағаз құжаттар; оқушының жазуы көк сиямен */
+  --desk:#22332f; --folder:#d6b36f; --paper:#f4f1e8; --ink:#1b1b1f; --muted:#5f5a50; --line:#cfc8b6;
+  --stamp:#b3261e; --pen:#1d3f9c; --ok:#2a6a3f;
+  --serif:"PT Serif",Georgia,serif; --mono:"PT Mono",ui-monospace,Menlo,Consolas,monospace;
+  --ui:"PT Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --hand:"Caveat","Segoe Script",cursive;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--desk);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.55}
+.wrap{max-width:740px;margin:0 auto;padding:0 16px 64px;display:flex;flex-direction:column;gap:16px}
+.top{position:sticky;top:0;z-index:5;margin:0 -16px;background:var(--desk);padding-top:6px}
+.credit{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--folder);text-align:center;padding:0 16px 6px}
+header.bar{background:var(--folder);color:var(--ink);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-radius:10px 10px 0 0;margin:0 8px}
+.bar .case{font-family:var(--mono);font-size:13px;letter-spacing:.06em;flex:1;min-width:110px}
+.bar .stat{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:15px}
+.bar .stat small{font-size:11px;margin-right:4px;opacity:.75}
+.bar .late{color:var(--stamp);font-weight:700}
+nav.tabs{display:none;background:var(--paper);margin:0 8px;border-bottom:1px solid var(--line)}
+nav.tabs.on{display:flex}
+nav.tabs button{flex:1;background:none;border:0;border-bottom:3px solid transparent;padding:10px 2px;font-weight:700;font-size:14px;color:var(--muted)}
+nav.tabs button[aria-current="true"]{color:var(--ink);border-bottom-color:var(--stamp)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--pen);outline-offset:2px}
+.refbtn{background:var(--ink);color:var(--paper);border:0;border-radius:3px;padding:6px 10px;font-weight:700;font-size:14px}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(30px,8vw,48px);line-height:1.1;margin:24px 0 0;color:var(--paper);text-wrap:balance}
+h2{font-family:var(--serif);font-weight:700;font-size:20px;line-height:1.25;margin:0;text-wrap:balance}
+h3{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:400}
+p{margin:0}
+.lead{font-size:17px;color:var(--paper)}
+.hintline{font-family:var(--mono);font-size:12px;color:var(--folder)}
+.sheet{background:var(--paper);border-radius:2px;padding:20px 18px;display:flex;flex-direction:column;gap:14px;box-shadow:0 2px 0 rgba(0,0,0,.25),0 10px 24px rgba(0,0,0,.25)}
+.sheet.typed{font-family:var(--mono);font-size:14.5px;line-height:1.65}
+.dochead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:2px solid var(--ink);padding-bottom:10px}
+.dochead .tag{font-family:var(--mono);font-size:12px;letter-spacing:.12em}
+.stamp{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--stamp);border:2px solid var(--stamp);padding:2px 6px;transform:rotate(-5deg);white-space:nowrap;flex:none}
+.group{display:flex;flex-direction:column;gap:6px}
+.group>h3{color:var(--folder);margin-top:6px}
+.item{display:flex;gap:12px;align-items:center;text-align:left;background:var(--paper);border:0;border-left:6px solid var(--folder);border-radius:2px;padding:10px 12px;width:100%}
+.item:hover{border-left-color:var(--stamp)}
+.item .no{font-family:var(--mono);font-size:13px;color:var(--muted);flex:none;width:28px}
+.item .tx{flex:1;min-width:0}
+.item b{display:block;font-family:var(--serif)}
+.item small{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.pill{font-family:var(--hand);font-size:18px;font-weight:700;color:var(--pen);white-space:nowrap}
+.pill.none{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--muted)}
+.pill.bad{font-family:var(--mono);font-size:11px;color:var(--stamp);border:1.5px solid var(--stamp);padding:1px 5px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:6px 10px 6px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:400}
+td.n,.n{font-family:var(--mono);font-variant-numeric:tabular-nums}
+td.n{white-space:nowrap}
+.eq{font-family:var(--mono);border:1px dashed var(--muted);padding:8px 12px;font-size:15px;overflow-x:auto;white-space:nowrap}
+.photo{background:#fff;padding:10px 10px 8px;box-shadow:0 2px 8px rgba(0,0,0,.3);transform:rotate(-1deg);align-self:center;max-width:100%;display:flex;flex-direction:column;gap:6px}
+.photo svg{display:block;max-width:100%;height:auto;background:#2b2f33}
+.photo figcaption,.cap{font-family:var(--hand);font-size:18px;color:var(--ink);line-height:1.2}
+figure{margin:0}
+.task{border:2px solid var(--pen);border-radius:2px;padding:14px;display:flex;flex-direction:column;gap:12px}
+.task h3{color:var(--pen)}
+.q{font-family:var(--serif);font-weight:700;font-size:17px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opts button{background:#fff;border:1.5px solid var(--ink);border-radius:2px;padding:10px 14px;text-align:left}
+.opts button[aria-pressed="true"]{background:var(--pen);color:#fff;border-color:var(--pen)}
+.numrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input[type=text],textarea{font:inherit;background:#fff;color:var(--pen);border:0;border-bottom:2px solid var(--pen);border-radius:0;padding:8px 6px;font-family:var(--hand);font-size:22px;font-weight:700}
+input.num{width:140px}
+textarea{width:100%;min-height:76px;resize:vertical;line-height:1.3;background:repeating-linear-gradient(#fff,#fff 27px,var(--line) 28px)}
+.go{background:var(--stamp);color:#fff;border:0;border-radius:2px;padding:12px 18px;font-weight:700}
+.go.big{font-family:var(--serif);font-size:18px;padding:14px 22px;align-self:flex-start}
+.go:disabled{opacity:.4;cursor:default}
+.ghost{background:var(--paper);border:1.5px solid var(--ink);border-radius:2px;padding:8px 12px;font-weight:700;font-size:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
+.fb{border-left:4px solid var(--stamp);padding:8px 12px;background:#fff;font-size:15px}
+.fb.ok{border-color:var(--ok)}
+.fb.tip{border-color:var(--pen)}
+.fb b{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block;font-weight:400}
+.sol{font-family:var(--mono);font-size:14px;line-height:1.7}
+ul,ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:4px}
+.qa{display:flex;flex-direction:column;gap:10px}
+.qa p.t{color:var(--muted)}
+.qa p.a{padding-left:16px;border-left:3px solid var(--line)}
+.who{position:relative}
+.who.out h2{text-decoration:line-through;opacity:.55}
+.who.out::after,.who.hot::after{position:absolute;right:14px;top:16px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;border:2px solid;padding:1px 5px;transform:rotate(-6deg);background:var(--paper)}
+.who.out::after{content:"АҚТАЛДЫ";color:var(--ok)}
+.who.hot::after{content:"КҮДІКТІ";color:var(--stamp)}
+.seg{display:flex}
+.seg button{flex:1;background:#fff;border:1.5px solid var(--ink);padding:6px 4px;font-size:13px;font-weight:700;margin-left:-1.5px}
+.seg button:first-child{margin-left:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.res{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.res div{border-top:3px solid var(--ink);padding-top:8px}
+.res small{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block}
+.res span{font-family:var(--serif);font-weight:700;font-size:26px;font-variant-numeric:tabular-nums}
+.verdict{font-family:var(--mono);font-weight:700;color:var(--stamp);border:3px solid var(--stamp);padding:6px 12px;transform:rotate(-2deg);align-self:flex-start;letter-spacing:.04em}
+#ref{position:fixed;inset:0;z-index:10;background:rgba(10,16,14,.7);display:none;align-items:flex-end;justify-content:center}
+#ref.open{display:flex}
+#ref .panel{background:var(--paper);width:100%;max-width:740px;max-height:88%;overflow-y:auto;padding:20px;border-radius:8px 8px 0 0;display:flex;flex-direction:column;gap:14px}
+#ref .hd{display:flex;justify-content:space-between;align-items:center;gap:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="credit">Ойынды құрастырған Dias Sempai</div>
+    <header class="bar">
+      <span class="case">ІС № 27-К</span>
+      <span class="stat"><small>УАҚЫТ</small><span id="timer">45:00</span></span>
+      <span class="stat"><small>ЕСЕП</small><span id="cnt">0/6</span></span>
+      <button class="refbtn" id="openRef" type="button">Анықтама</button>
+    </header>
+    <nav class="tabs" id="tabs">
+      <button type="button" data-go="docs">Материалдар</button>
+      <button type="button" data-go="ints">Жауап алу</button>
+      <button type="button" data-go="note">Дәптер</button>
+      <button type="button" data-go="acc">Айыптау</button>
+    </nav>
+  </div>
+  <main id="app" class="wrap" style="padding:0"></main>
+</div>
+
+<div id="ref" role="dialog" aria-modal="true" aria-labelledby="refT">
+  <div class="panel">
+    <div class="hd"><h2 id="refT">Анықтамалық</h2><button class="ghost" id="closeRef" type="button">Жабу</button></div>
+    <h3>Салыстырмалы атомдық массалар</h3>
+    <div class="tw"><table><tr><td class="n">H 1</td><td class="n">C 12</td><td class="n">N 14</td><td class="n">O 16</td><td class="n">Na 23</td><td class="n">S 32</td><td class="n">Cl 35,5</td></tr>
+    <tr><td class="n">K 39</td><td class="n">Cu 64</td><td class="n">Zn 65</td><td class="n">Ag 108</td><td class="n">Ba 137</td><td class="n">Au 197</td><td></td></tr></table></div>
+    <h3>Формулалар</h3>
+    <div class="sol">
+      n = m / M &nbsp;·&nbsp; n = V / 22,4 (газ, қ.ж.)<br>
+      ω = m(зат) / m(ерітінді немесе қоспа)<br>
+      C = n / V(ерітінді, л)<br>
+      M = 2 · D(H<sub>2</sub>)<br>
+      Жану өнімдері бойынша: n(C) = n(CO<sub>2</sub>), n(H) = 2 · n(H<sub>2</sub>O), m(O) = m(зат) − m(C) − m(H)
+    </div>
+    <h3>Металдар</h3>
+    <ul><li>Мырыш тұз қышқылынан сутекті ығыстырады, мыс пен алтын ығыстырмайды.</li>
+    <li>Жез: мыс пен мырыштың құймасы.</li></ul>
+    <h3>Иондарды анықтау</h3>
+    <div class="tw"><table><tr><th>Ион</th><th>Реактив</th><th>Белгісі</th></tr>
+      <tr><td class="n">NH<sub>4</sub><sup>+</sup></td><td>сілті, қыздыру</td><td>өткір иісті газ NH<sub>3</sub>, ылғал лакмус көгереді</td></tr>
+      <tr><td class="n">Cl<sup>−</sup></td><td class="n">AgNO<sub>3</sub></td><td>ақ ірімшік тәрізді тұнба</td></tr>
+      <tr><td class="n">SO<sub>4</sub><sup>2−</sup></td><td class="n">BaCl<sub>2</sub></td><td>ақ тұнба, қышқылдарда ерімейді</td></tr>
+      <tr><td class="n">Zn<sup>2+</sup></td><td>сілті</td><td>ақ қоймалжың тұнба, артық сілтіде ериді</td></tr>
+      <tr><td class="n">Na<sup>+</sup> / K<sup>+</sup></td><td>жалын</td><td>сары / күлгін</td></tr></table></div>
+    <h3>Органикалық заттар</h3>
+    <ul><li>Бір негізді карбон қышқылының 1 молі 1 моль NaOH-пен бейтараптанады.</li>
+    <li>Қаныққан көмірсутектер (парафин) сілтімен әрекеттеспейді.</li></ul>
+    <h3>Газдар</h3>
+    <ul><li>Әк суын лайлайтын газ: CO<sub>2</sub>.</li><li>M: Ar 40, CO<sub>2</sub> 44, C<sub>3</sub>H<sub>8</sub> 44, N<sub>2</sub> 28.</li></ul>
+  </div>
+</div>
+
+<script>
+const SUS=[
+ {id:'zhanar',name:'Жанар',full:'Жанар Әбенова',role:'реставратор'},
+ {id:'erzhan',name:'Ержан',full:'Ержан Тұрсынов',role:'зергер, сырттан шақырылған шебер'},
+ {id:'madina',name:'Диас',full:'Диас Қайратұлы',role:'экскурсия жүргізуші'},
+ {id:'serik',name:'Серік',full:'Серік Жақсыбеков',role:'күзет ауысымының бастығы'},
+ {id:'gulnar',name:'Гүлнар',full:'Гүлнар Омарова',role:'қор сақтаушы'},
+ {id:'olzhas',name:'Олжас',full:'Олжас Нұрғалиев',role:'техник-электрик'}
+];
+const MAKER='zhanar',SWAP='olzhas',LIMIT=2700;
+
+const svgScene=`<svg viewBox="0 0 320 200" width="320" height="200" role="img" aria-label="Витринаның фотосы, төрт белгі қойылған">
+<rect x="60" y="20" width="200" height="120" fill="#3d464c" stroke="#c9d3d6" stroke-width="3"/>
+<rect x="40" y="140" width="240" height="40" fill="#4a3526"/>
+<rect x="80" y="112" width="160" height="26" fill="#6b1f2a"/>
+<ellipse cx="160" cy="92" rx="46" ry="20" fill="#d9a520"/><circle cx="196" cy="80" r="11" fill="#d9a520"/><circle cx="200" cy="78" r="2" fill="#3d464c"/>
+<rect x="250" y="76" width="14" height="20" fill="#9aa3a6"/><circle cx="257" cy="86" r="3" fill="#1b1b1f"/>
+<circle cx="110" cy="124" r="5" fill="#f1efe6"/><circle cx="214" cy="126" r="3" fill="#111"/><circle cx="222" cy="130" r="2.5" fill="#111"/>
+<rect x="66" y="26" width="16" height="8" fill="#9aa3a6"/>
+<g font-family="monospace" font-size="12" font-weight="700" fill="#1b1b1f">
+<rect x="98" y="150" width="20" height="18" fill="#f2c230"/><text x="104" y="164">1</text>
+<rect x="208" y="150" width="20" height="18" fill="#f2c230"/><text x="214" y="164">2</text>
+<rect x="268" y="52" width="20" height="18" fill="#f2c230"/><text x="274" y="66">3</text>
+<rect x="34" y="22" width="20" height="18" fill="#f2c230"/><text x="40" y="36">4</text></g></svg>`;
+const jar=(x,label,val)=>`<g transform="translate(${x},0)"><rect x="22" y="38" width="56" height="70" rx="6" fill="#8a5a2b" stroke="#c9a070" stroke-width="2"/><rect x="30" y="26" width="40" height="14" fill="#1b1b1f"/>
+<rect x="28" y="58" width="44" height="30" fill="#f4f1e8"/><text x="50" y="72" font-size="10" text-anchor="middle" font-family="monospace" fill="#1b1b1f">AuCl₃</text><text x="50" y="84" font-size="9" text-anchor="middle" font-family="monospace" fill="#1b1b1f">${label}</text>
+<rect x="6" y="108" width="88" height="34" fill="#9aa3a6"/><rect x="18" y="116" width="64" height="20" fill="#0c1a12"/><text x="50" y="131" font-size="13" text-anchor="middle" font-family="monospace" fill="#6dff9a">${val} г</text></g>`;
+const svgJars=`<svg viewBox="0 0 320 156" width="320" height="156" role="img" aria-label="Үш банка таразыда: Жанар 0,05 г; Ержан 1,96 г; Диас 1,00 г">${jar(6,'Жанар','0,05')}${jar(110,'Ержан','1,96')}${jar(214,'Диас','1,00')}</svg>`;
+const tube=(x,n,fill,extra)=>`<g transform="translate(${x},0)"><path d="M10 20v96a14 14 0 0 0 28 0V20" fill="none" stroke="#c9d3d6" stroke-width="3"/><path d="M12 70v46a12 12 0 0 0 24 0V70z" fill="${fill}"/>${extra||''}<text x="24" y="152" font-size="13" text-anchor="middle" font-family="monospace" fill="#f4f1e8">${n}</text></g>`;
+const svgTubes=`<svg viewBox="0 0 320 162" width="320" height="162" role="img" aria-label="Төрт сынама">${tube(20,'1','#b9c7cc','<rect x="14" y="2" width="20" height="14" fill="#2f55c8"/>')}${tube(98,'2','#b9c7cc','<path d="M13 100v16a11 11 0 0 0 22 0v-16z" fill="#fff"/>')}${tube(176,'3','#b9c7cc')}
+<g transform="translate(254,0)"><path d="M24 40c-14 22-12 44 0 52 12-8 14-30 0-52z" fill="#5d7fa3" opacity=".8"/><rect x="18" y="92" width="12" height="40" fill="#9aa3a6"/><text x="24" y="152" font-size="13" text-anchor="middle" font-family="monospace" fill="#f4f1e8">4</text></g></svg>`;
+
+const DOCS=[
+{tag:'Хаттама',t:'Оқиға орнын қарау хаттамасы',body:`
+<figure class="photo">${svgScene}<figcaption>№ 3 зал, «Алтын барыс» витринасы. Дүйсенбі, 10:40</figcaption></figure>
+<p>Дүйсенбі күні астанадан келген сарапшы экспонатты тексеріп, оның түпнұсқа емес екенін анықтады: сызатқа тамызылған азот қышқылы жасыл түс берді. Сақ дәуірінің алтын қапсырмасы алтын жалатылған көшірмемен ауыстырылған.</p>
+<ol>
+<li>Барқыт төсеніште ақ ұнтақ қалдығы бар (№ 3 сараптама).</li>
+<li>Барқытта екі кішкене күйген тесік бар (№ 6 сараптама).</li>
+<li>Витрина құлпы бүтін, кілтпен ашылған. Құлып ұңғысынан балауыз тәрізді ақ заттың қалдығы алынды (№ 4 сараптама).</li>
+<li>Витринадағы қорғаныш газдың құрамы өзгерген (№ 5 сараптама).</li>
+</ol>
+<p>Саусақ іздері табылған жоқ. Витринаның екі кілті бар: бірі қор сақтаушыда, екіншісі директорда. Директор 1 қарашадан бері шетелде іссапарда. Қор сейфі тексерілді: былтыр жасалған ресми көшірме орнында тұр.</p>`},
+{tag:'Сараптама № 1',t:'Жалған барыстың құймасы',body:`
+<p>Көшірменің өзегінен 20,0 г жаңқа алынды. Оны артық мөлшердегі тұз қышқылымен өңдегенде 2,24 л (қ.ж.) сутек бөлінді. Ерімей қалған металл қызыл түсті. Құйма екі металдан тұрады: жез.</p>
+<div class="eq">Zn + 2HCl → ZnCl<sub>2</sub> + H<sub>2</sub>↑</div>`,
+ task:{q:'Құймадағы мыстың массалық үлесі неше пайыз?',kind:'num',ans:67.5,tol:0.3,unit:'%',
+ hint:'Қышқылмен қай металл әрекеттеседі, қайсысы әрекеттеспейді? Сутектің мөлшері соның біреуін ғана береді.',
+ sol:'n(H<sub>2</sub>) = 2,24 / 22,4 = 0,1 моль = n(Zn)<br>m(Zn) = 0,1 · 65 = 6,5 г; m(Cu) = 20 − 6,5 = 13,5 г<br>ω(Cu) = 13,5 / 20 = 67,5%',
+ concl:'Бұл музей шеберханасындағы жез табақ (Cu 67,5%). Ержанның жезі Cu 60%, ресми көшірме де содан жасалған. Демек витринадағы зат ресми көшірме емес және Ержанның шеберханасында жасалмаған.'}},
+{tag:'Сараптама № 2',t:'Алтын қабаты',body:`
+<p>Көшірменің бетіндегі алтын қабаты толық ерітіліп өлшенді: 1,97 г таза алтын. Қабаттың құрылымы оның алтын(III) хлориді ерітіндісін электролиздеу арқылы отырғызылғанын көрсетеді.</p>
+<div class="eq">2AuCl<sub>3</sub> → 2Au + 3Cl<sub>2</sub>↑ (электролиз)</div>`,
+ task:{q:'Осындай қабатты алуға неше грамм AuCl₃ жұмсалады?',kind:'num',ans:3.035,tol:0.04,unit:'г',
+ hint:'Теңдеудегі коэффициенттерге қара: алтынның зат мөлшерінен тұздың зат мөлшерін тап.',
+ sol:'n(Au) = 1,97 / 197 = 0,01 моль<br>M(AuCl<sub>3</sub>) = 197 + 106,5 = 303,5 г/моль<br>m = 0,01 · 303,5 = 3,035 г<br>Бөлінетін хлор: 0,015 моль = 336 мл',
+ concl:'Диастың 2 грамы жетпейді. Ержан 5 − 1,96 = 3,04 г жұмсаған: бір ғана көшірмеге, яғни былтырғы ресми көшірмеге. Жанар 4 − 0,05 = 3,95 г жұмсаған: жақтауға 0,91 г жеткілікті, қалған 3,04 г жалған барысқа кеткен. Сенбідегі 336 мл хлор да 1,97 г алтынға дәл келеді.'}},
+{tag:'Сараптама № 3',t:'Барқыттағы ақ қалдық',body:`
+<p>Қалдық суда ерітіліп, төрт сынама жасалды.</p>
+<figure class="photo">${svgTubes}<figcaption>1: сілті қосып қыздырды, лакмус қағазы көгерді. 2: AgNO₃, ақ ірімшік тәрізді тұнба. 3: BaCl₂, өзгеріс жоқ. 4: жалын боялмады.</figcaption></figure>
+<p>Бірінші сынамада өткір иісті газ бөлінді.</p>`,
+ task:{q:'Ақ қалдық қандай зат?',kind:'opt',opts:['NaCl','NH<sub>4</sub>Cl','(NH<sub>4</sub>)<sub>2</sub>SO<sub>4</sub>','NH<sub>4</sub>NO<sub>3</sub>','ZnCl<sub>2</sub>','KCl'],ans:1,
+ hint:'Әр сынама бір ионды ғана көрсетеді. «Өзгеріс жоқ» деген нәтиже де ақпарат.',
+ sol:'NH<sub>4</sub><sup>+</sup> + OH<sup>−</sup> → NH<sub>3</sub>↑ + H<sub>2</sub>O (лакмус көгереді)<br>Ag<sup>+</sup> + Cl<sup>−</sup> → AgCl↓<br>BaCl<sub>2</sub>-мен тұнба жоқ → сульфат емес<br>Зат: NH<sub>4</sub>Cl',
+ concl:'Аммоний хлориді, яғни нашатыр: дәнекерлеу флюсі. Музейде ол тек Олжастың құлыптаулы шкафында. Ержан бура қолданады, Жанар дәнекерлемейді.'}},
+{tag:'Сараптама № 4',t:'Құлып ұңғысындағы зат',body:`
+<p>Құлып ұңғысына жұмсақ ақ зат тығылып, кілт бедерінің қалыбы алынған. Заттың қалдығы зерттелді.</p>
+<ul><li>2,84 г затты толық жаққанда 7,92 г CO<sub>2</sub> және 3,24 г H<sub>2</sub>O түзілді.</li>
+<li>2,84 г затты бейтараптауға 0,40 г NaOH жұмсалды.</li></ul>`,
+ task:{q:'Бұл қандай зат?',kind:'opt',opts:['Октадекан C<sub>18</sub>H<sub>38</sub> (парафин құрамында)','Пальмитин қышқылы C<sub>15</sub>H<sub>31</sub>COOH','Стеарин қышқылы C<sub>17</sub>H<sub>35</sub>COOH','Олеин қышқылы C<sub>17</sub>H<sub>33</sub>COOH','Глицерин C<sub>3</sub>H<sub>5</sub>(OH)<sub>3</sub>'],ans:2,
+ hint:'Екі дерек те бір затқа жатады: біреуі құрамын, екіншісі массасын береді.',
+ sol:'n(C) = 7,92 / 44 = 0,18 моль; n(H) = 2 · 3,24 / 18 = 0,36 моль<br>m(O) = 2,84 − 2,16 − 0,36 = 0,32 г; n(O) = 0,02 моль<br>C : H : O = 9 : 18 : 1<br>n(NaOH) = 0,40 / 40 = 0,01 моль → M = 2,84 / 0,01 = 284<br>C<sub>18</sub>H<sub>36</sub>O<sub>2</sub>: стеарин қышқылы',
+ concl:'Стеарин: күзет постындағы шамнан (алтаудан бесеуі қалған). Ұры кілттің қалыбын алған, яғни өз кілті болмаған. Гүлнарға қалып керек емес.'}},
+{tag:'Сараптама № 5',t:'Витринадағы газ',body:`
+<p>Витрина аргонмен толтырылып сақталады, ішінде оттек датчигі бар. Қазір витринадағы газ аргон емес: оның сутек бойынша тығыздығы 22, әк суын лайлайды. Витринаның көлемі 33,6 л (қ.ж.).</p>
+<p>Ұры витринаны ашқанда ішіне ауа кірген. Датчик қалпына келуі үшін ол витринаны басқа газбен қайта толтырған.</p>`,
+ task:{q:'Витринаны толтыруға осы газдың неше грамы кеткен?',kind:'num',ans:66,tol:0.5,unit:'г',
+ hint:'Сутек бойынша тығыздық газдың молярлық массасын береді.',
+ sol:'M = 2 · 22 = 44 г/моль, әк суын лайлайды → CO<sub>2</sub><br>n = 33,6 / 22,4 = 1,5 моль<br>m = 1,5 · 44 = 66 г',
+ concl:'Күзет постындағы № 1 көмірқышқылды өрт сөндіргіштен дәл 66 г кеміген. Сол кеште постта Серіктен бөлек Олжас болған, ал Серіктің өзі 21:10–21:30 аралығында сыртқы камерада тұр.'}},
+{tag:'Сараптама № 6',t:'Барқыттағы күйген тесіктер',body:`
+<p>Тесіктердің айналасындағы матадан сұйықтық сорып алынды. Ол BaCl<sub>2</sub> ерітіндісімен қышқылдарда ерімейтін ақ тұнба берді. 4,90 г сынаманы толық бейтараптауға 1 моль/л NaOH ерітіндісінің 36 мл-і жұмсалды.</p>`,
+ task:{q:'Сұйықтықтағы қышқылдың массалық үлесі неше пайыз?',kind:'num',ans:36,tol:0.5,unit:'%',
+ hint:'Тұнба қай қышқылды көрсетеді? Бейтараптану теңдеуін жазып, коэффициенттерге қара.',
+ sol:'BaSO<sub>4</sub>↓ → күкірт қышқылы<br>H<sub>2</sub>SO<sub>4</sub> + 2NaOH → Na<sub>2</sub>SO<sub>4</sub> + 2H<sub>2</sub>O<br>n(NaOH) = 0,036 моль → n(H<sub>2</sub>SO<sub>4</sub>) = 0,018 моль<br>m = 0,018 · 98 = 1,764 г; ω = 1,764 / 4,90 = 36%',
+ concl:'36%-дық күкірт қышқылы: аккумулятор электролиті. Шеберханадағы қышқыл 10%-дық. Аккумулятор бөлмесінің кілті тек Серік пен Олжаста, ал Серіктің алибиі бар.'}},
+{tag:'Фото және чектер',t:'Алтын хлоридінің үш банкасы',body:`
+<figure class="photo">${svgJars}<figcaption>Тінту кезінде табылған банкалар, ішіндегісі таразыда өлшенді</figcaption></figure>
+<h3>«ХимРеактив» дүкенінің чектері</h3>
+<div class="tw"><table><tr><th>Сатып алушы</th><th>Күні</th><th>Тауар</th></tr>
+<tr><td>Ержан Тұрсынов</td><td>былтыр, 10 ақпан</td><td class="n">AuCl<sub>3</sub>, 5,00 г</td></tr>
+<tr><td>Диас Қайратұлы</td><td>20 қазан</td><td class="n">AuCl<sub>3</sub>, 2,00 г</td></tr>
+<tr><td>Жанар Әбенова</td><td>3 қараша</td><td class="n">AuCl<sub>3</sub>, 4,00 г</td></tr></table></div>
+<p>Басқа қызметкерлердің атына алтын тұздары сатылмаған.</p>`},
+{tag:'Паспорт',t:'Ресми көшірменің паспорты',body:`
+<div class="tw"><table>
+<tr><th>Бұйым</th><td>«Алтын барыс» қапсырмасының көрмелік көшірмесі</td></tr>
+<tr><th>Жасаған</th><td>зергер Ержан Тұрсынов, былтыр ақпан айы</td></tr>
+<tr><th>Негізі</th><td>жез, Cu 60%, Zn 40% (шебердің өз материалы, жүкқұжаты тіркелген)</td></tr>
+<tr><th>Жабыны</th><td>алтын, 1,97 г, AuCl<sub>3</sub> ерітіндісінен электролизбен</td></tr>
+<tr><th>Сақталатын орны</th><td>қор бөлмесінің сейфі</td></tr></table></div>
+<p>Көшірменің сыртқы түрі мен өлшемдері түпнұсқамен бірдей. Паспорттың көшірмесі шеберханада да сақталады.</p>`},
+{tag:'Тізім',t:'Музейдегі заттарды түгендеу',body:`
+<div class="tw"><table><tr><th>Орны</th><th>Кімнің қолы жетеді</th><th>Не бар</th></tr>
+<tr><td>Реставрация шеберханасы</td><td>есік тек Жанардың картасымен ашылады</td><td>гальваникалық ванна; жез табақ (Cu 67,5%); H<sub>2</sub>SO<sub>4</sub> 10%; HCl 10%; аммиак ерітіндісі; парафин; ара балауызы</td></tr>
+<tr><td>Техник шкафы</td><td>құлыптаулы, кілті Олжаста</td><td>нашатыр (NH<sub>4</sub>Cl); канифоль; дәнекер; оқшаулағыш таспа</td></tr>
+<tr><td>Аккумулятор бөлмесі (жертөле)</td><td>кілті Серік пен Олжаста</td><td>резервтік аккумуляторлар; электролит H<sub>2</sub>SO<sub>4</sub> 36%</td></tr>
+<tr><td>Күзет посты</td><td>ашық</td><td>стеарин шамдар: журналда 6, орнында 5; № 1 өрт сөндіргіш</td></tr>
+<tr><td>Қор бөлмесі</td><td>кілті Гүлнарда</td><td>сейф; силикагель; ораулық қағаз</td></tr></table></div>`},
+{tag:'Журнал',t:'Күзет жүйесі: сенбі',body:`
+<h3>Кіру-шығу</h3>
+<div class="tw"><table><tr><th>Кім</th><th>Кірді</th><th>Шықты</th></tr>
+<tr><td>Серік Жақсыбеков</td><td class="n">08:00</td><td>тәуліктік кезекшілік</td></tr>
+<tr><td>Жанар Әбенова</td><td class="n">09:00</td><td class="n">22:10</td></tr>
+<tr><td>Гүлнар Омарова</td><td class="n">09:10</td><td class="n">21:32</td></tr>
+<tr><td>Диас Қайратұлы</td><td class="n">09:30</td><td class="n">19:05</td></tr>
+<tr><td>Ержан Тұрсынов (қонақ)</td><td class="n">16:00</td><td class="n">17:10</td></tr>
+<tr><td>Олжас Нұрғалиев</td><td class="n">17:40</td><td class="n">21:40</td></tr></table></div>
+<h3>Оқиғалар</h3>
+<div class="tw"><table>
+<tr><td class="n">21:14</td><td>№ 3 залдың сигнализациясы сервистік режимге қойылды (панельден, кодпен)</td></tr>
+<tr><td class="n">21:17–21:21</td><td>витринадағы оттек деңгейі көтерілді</td></tr>
+<tr><td class="n">21:22</td><td>оттек деңгейі қалпына келді</td></tr>
+<tr><td class="n">21:26</td><td>сигнализация қайта қосылды</td></tr></table></div>
+<h3>Камералар</h3>
+<ul><li>Сыртқы камера, кіреберіс: 21:10–21:30 Серік есік алдында тұр, 21:22-де курьерден сәлемдеме алды.</li>
+<li>Екінші қабат дәлізінің камерасы сервистік режимде жазбайды.</li>
+<li>Күзет посты мен жертөледе камера жоқ.</li></ul>
+<p>Ескерту: сервистік код панель қақпағының ішкі жағына жазылған.</p>`},
+{tag:'Журнал',t:'Шеберхана: есік пен газ анализаторы',body:`
+<h3>Есік картасы, сенбі</h3>
+<div class="tw"><table><tr><th>Уақыт</th><th>Оқиға</th></tr>
+<tr><td class="n">09:05</td><td>Жанар кірді</td></tr><tr><td class="n">13:00</td><td>шықты</td></tr>
+<tr><td class="n">13:40</td><td>кірді</td></tr><tr><td class="n">18:30</td><td>шықты</td></tr>
+<tr><td class="n">19:02</td><td>кірді</td></tr><tr><td class="n">22:06</td><td>шықты</td></tr></table></div>
+<h3>Газ анализаторы (гальваникалық ванна үстіндегі сору шкафы)</h3>
+<div class="tw"><table><tr><th>Күні</th><th>Уақыты</th><th>Тіркелген газ</th></tr>
+<tr><td>бейсенбі</td><td class="n">10:20–10:50</td><td class="n">Cl<sub>2</sub>, 101 мл (қ.ж.)</td></tr>
+<tr><td>сенбі</td><td class="n">14:10–15:40</td><td class="n">Cl<sub>2</sub>, 336 мл (қ.ж.)</td></tr></table></div>
+<p>Аптаның басқа күндерінде газ тіркелмеген.</p>`},
+{tag:'Акт',t:'Өрт сөндіргіштерді өлшеу',body:`
+<p>Дүйсенбі күні барлық көмірқышқылды өрт сөндіргіштер өлшенді. Соңғы тексеріс жұма күні болған.</p>
+<div class="tw"><table><tr><th>№</th><th>Орны</th><th>Жұма</th><th>Дүйсенбі</th></tr>
+<tr><td class="n">1</td><td>күзет посты</td><td class="n">2000 г</td><td class="n">1934 г</td></tr>
+<tr><td class="n">2</td><td>шеберхана</td><td class="n">2000 г</td><td class="n">2000 г</td></tr>
+<tr><td class="n">3</td><td>қор бөлмесі</td><td class="n">2000 г</td><td class="n">1998 г</td></tr>
+<tr><td class="n">4</td><td>жертөле</td><td class="n">2000 г</td><td class="n">2000 г</td></tr></table></div>
+<p>№ 1 өрт сөндіргіштің пломбасы үзілген. Ол дүйсенбіде екінші қабат дәлізінен табылды.</p>`}
+];
+const TASKS=DOCS.map((d,i)=>d.task?i:-1).filter(i=>i>=0);
+
+const INT=[
+{id:'zhanar',qa:[
+ ['Сенбі күні не істедіңіз?','Күні бойы шеберханада болдым, қола айнаны тазаладым. Кешкі жетіден кейін шеберханадан шыққан жоқпын, 22:06-да үйге кеттім. Есік тек менің картаммен ашылады.'],
+ ['Гальваникалық ваннаны соңғы рет қашан қостыңыз?','Бейсенбіде. Икона жақтауына алтын жалаттым, 0,591 г алтын отырды. Сенбіде ваннаны қосқан жоқпын.'],
+ ['Алтын хлоридін қайдан алдыңыз, қаншасы қалды?','3 қарашада 4 г сатып алдым. Тек жақтауға жұмсадым, қалғаны банкада тұр.'],
+ ['Шеберханадағы жез табақ не үшін керек?','Оқушылар үйірмесіне жетон кесемін.'],
+ ['Дәнекерлеу жұмысын кім істейді?','Мен дәнекерлемеймін. Ондай жұмысты Олжасқа беремін.']]},
+{id:'erzhan',qa:[
+ ['Музейге қандай қатысыңыз бар?','Былтыр ақпанда ресми көшірмені жасадым. Негізі өз шеберханамдағы жез, алтынды AuCl₃ ерітіндісінен жалаттым. Содан бері алтын жалатқан емеспін.'],
+ ['Сенбіде музейге неге келдіңіз?','Директордың орынбасарымен жаңа тапсырыс жөнінде сөйлестім. 16:00-де келіп, 17:10-да кеттім.'],
+ ['Банкаңызда алтын хлориді неге аз қалған?','5 г алғанмын. Ресми көшірмеге кеткені кетті, қалғаны сол.'],
+ ['Дәнекерлеуге не қолданасыз?','Бура. Нашатыр зергерлік іске жарамайды.']]},
+{id:'madina',qa:[
+ ['Алтын хлоридін не үшін сатып алдыңыз?','Химия факультетінде сырттай оқимын. Курстық жұмысым гальваностегия туралы. 2 г алдым, одан 100 г 1%-дық ерітінді дайындадым, қалғаны банкада.'],
+ ['Сенбіде музейден қашан шықтыңыз?','19:05-те. Қайтып келген жоқпын.'],
+ ['Шеберханаға кіріп пе едіңіз?','Жанар апайдан ваннаның қалай жұмыс істейтінін сұрағаным рас. Бірақ оны өзім қосып көрген емеспін, есігі де маған ашылмайды.']]},
+{id:'serik',qa:[
+ ['Сенбі кешін айтып беріңіз.','20:30-да Олжас постқа шай ішуге келді. 20:40-та мен ғимаратты аралауға кеттім, ол постта қалды. 21:05-те оралғанымда ол жоқ еді.'],
+ ['21:14 пен 21:26 аралығында қайда болдыңыз?','Сыртта, есік алдында. Курьер сәлемдеме әкелетін болған, соны күттім.'],
+ ['Постта шам неге тұр?','Жарық сөнсе деп стеарин шам ұстаймын. Сенбіде біреуі жоғалды, мән бермедім. Өрт сөндіргіштің орнында жоғын дүйсенбіде ғана байқадым.'],
+ ['Аккумулятор бөлмесіне кім кіреді?','Кілті менде және Олжаста. Сенбі күні кешкі алтылар шамасында Олжастың сол бөлмеден электролит құтысын алып шыққанын көрдім.'],
+ ['Сервистік кодты кім біледі?','Бәрі біледі. Панель қақпағында жазулы тұр.']]},
+{id:'gulnar',qa:[
+ ['Витрина кілті кімде?','Бірі менде, бірі директорда. Менікі әрдайым мойнымда жүреді, ешкімге берген емеспін.'],
+ ['Сенбі кешінде не істедіңіз?','21:30-ға дейін қорда түгендеу жасадым. Жалғыз болдым, ешкімді көрген жоқпын.'],
+ ['Ресми көшірме қайда?','Қор сейфінде. Дүйсенбіде полициямен бірге аштық, орнында тұр.'],
+ ['Жертөлеге, техник шкафына қатысыңыз бар ма?','Жоқ. Жертөлеге түскен емеспін, дәнекерлеу дегенді білмеймін.']]},
+{id:'olzhas',qa:[
+ ['Сенбіде музейге неге келдіңіз?','Екінші қабаттағы қозғалыс датчигі істен шыққан, соны жөндедім. 17:40-та келіп, 21:40-та кеттім.'],
+ ['21:14-те сигнализацияны сіз өшірдіңіз бе?','Жоқ. Ол кезде жертөледе электр қалқанын тексеріп жүрдім. Кодты кез келген адам тере алады, қақпақта жазулы.'],
+ ['Күзет постына кірдіңіз бе?','Жоқ, сенбіде постқа соққан жоқпын.'],
+ ['Аккумулятор бөлмесіне соңғы рет қашан кірдіңіз?','Өткен айда. Бұл аптада кірген жоқпын.'],
+ ['Нашатыр сізде бар ма?','Бар, дәнекерлегіштің ұшын тазалаймын. Шкафымда тұр, кілті өзімде.']]}
+];
+
+const fresh=()=>({view:'intro',doc:0,who:0,ans:{},notes:{},marks:{},memo:'',hints:[],wrongAcc:0,pm:'',ps:'',msg:'',start:0,end:0,name:'',solved:false});
+let S=fresh();
+const app=document.getElementById('app'),$=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+const sus=id=>SUS.find(s=>s.id===id);
+const has=i=>S.ans[i]!==undefined&&S.ans[i]!=='';
+const right=i=>{const t=DOCS[i].task;if(!has(i))return false;
+  if(t.kind==='opt')return +S.ans[i]===t.ans;
+  const v=parseFloat(String(S.ans[i]).replace(',','.'));return !isNaN(v)&&Math.abs(v-t.ans)<=t.tol};
+const nAns=()=>TASKS.filter(has).length,nRight=()=>TASKS.filter(right).length;
+const shown=i=>{const t=DOCS[i].task;return t.kind==='opt'?t.opts[S.ans[i]]:esc(S.ans[i])+' '+t.unit};
+const score=()=>Math.max(0,nRight()*10+(S.solved?40:0)-S.wrongAcc*10-S.hints.length*5);
+
+function fmt(sec){const s=Math.abs(sec);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function tick(){
+  const t=$('timer');
+  if(!S.start){t.textContent=fmt(LIMIT);return}
+  const el=Math.floor(((S.end||Date.now())-S.start)/1000),left=LIMIT-el;
+  t.textContent=left>=0?fmt(left):'+'+fmt(left);t.className=left<0?'late':'';
+}
+setInterval(tick,1000);
+
+function vIntro(){
+  return '<h1>«Алтын барыс» ісі</h1>'+
+  '<p class="lead">Өлкетану музейінің басты экспонаты, сақ дәуірінің алтын қапсырмасы, жалған көшірмемен ауыстырылған. Іс саған тапсырылды. Папкада хаттамалар, сараптамалар, фотолар мен журналдар және алты адамнан алынған жауаптар бар.</p>'+
+  '<div class="sheet"><div class="dochead"><span class="tag">ТЕРГЕУШІГЕ ТАПСЫРМА</span><span class="stamp">ІС № 27-К</span></div><ul>'+
+  '<li>Екі сұраққа жауап тап: көшірмені кім жасады және экспонатты кім ауыстырды. Бұл бір адам да, екі адам да болуы мүмкін.</li>'+
+  '<li>Алты сараптамада есеп бар. Жауабыңның дұрыс-бұрысын ешкім айтпайды, қате есеп қате адамға апарады.</li>'+
+  '<li>Қалған құжаттарда есеп жоқ, бірақ есептің нәтижесін солармен салыстырмай қорытынды шықпайды.</li>'+
+  '<li>Жауап бергендердің бәрі шындықты айтып тұрған жоқ. Сөзді құжатпен және есеппен тексер.</li>'+
+  '<li>Кейбір іздер әдейі басқа адамды нұсқайды.</li>'+
+  '<li>Материалдарды кез келген ретпен оқы, кез келген уақытта қайта орал. Алты есептің бәріне жауап жазған соң айыптай аласың.</li>'+
+  '<li>Қате айыптау 10 ұпай, әр кеңес 5 ұпай алады. Уақыт: 45 минут.</li></ul>'+
+  '<label for="nm"><h3>Тергеушінің аты-жөні</h3></label><input type="text" id="nm" data-k="name" style="width:100%;max-width:320px" autocomplete="off" value="'+esc(S.name)+'">'+
+  '<button class="go big" data-act="start" type="button">Папканы ашу</button></div>';
+}
+function vDocs(){
+  const flag=S.wrongAcc>=3;
+  return '<div class="group">'+DOCS.map((d,i)=>'<button class="item" type="button" data-doc="'+i+'"><span class="no">'+String(i+1).padStart(2,'0')+'</span><span class="tx"><small>'+d.tag+'</small><b>'+d.t+'</b></span>'+
+   (d.task?(has(i)?(flag&&!right(i)?'<span class="pill bad">қайта тексер</span>':'<span class="pill">'+shown(i)+'</span>'):'<span class="pill none">есеп бар</span>'):'')+'</button>').join('')+'</div>'+
+   '<p class="hintline">13 құжат. Көк сиямен жазылғаны сенің жауабың.</p>';
+}
+function vDoc(){
+  const i=S.doc,d=DOCS[i],t=d.task;
+  let h='<div class="row"><button class="ghost" data-go="docs" type="button">← Материалдар</button><button class="ghost" data-go="ints" type="button">Жауап алу</button></div>'+
+   '<div class="sheet"><div class="dochead"><div><div class="tag">'+d.tag.toUpperCase()+'</div><h2>'+d.t+'</h2></div><span class="stamp">ІС № 27-К · '+String(i+1).padStart(2,'0')+'</span></div>'+d.body;
+  if(t){
+    h+='<div class="task"><h3>Тергеушінің есебі</h3><p class="q">'+t.q+'</p>';
+    if(t.kind==='num')h+='<div class="numrow"><input class="num" type="text" id="ans" data-k="ans" inputmode="decimal" autocomplete="off" aria-label="Жауап" value="'+esc(S.ans[i])+'"><span>'+t.unit+'</span></div>';
+    else h+='<div class="opts">'+t.opts.map((o,j)=>'<button type="button" data-a="'+j+'" aria-pressed="'+(has(i)&&+S.ans[i]===j)+'">'+o+'</button>').join('')+'</div>';
+    h+=S.hints.includes(i)?'<div class="fb tip"><b>Кеңес</b>'+t.hint+'</div>':'<button class="ghost" data-act="hint" type="button" style="align-self:flex-start">Кеңес алу (−5 ұпай)</button>';
+    h+='</div>';
+  }
+  h+='<label for="note"><h3>Менің жазбам</h3></label><textarea id="note" data-k="note">'+esc(S.notes['d'+i])+'</textarea>'+
+   '<div class="row"><button class="ghost" data-doc="'+((i+DOCS.length-1)%DOCS.length)+'" type="button">← Алдыңғы</button><button class="ghost" data-doc="'+((i+1)%DOCS.length)+'" type="button">Келесі →</button></div></div>';
+  return h;
+}
+function vInts(){
+  return '<div class="group">'+INT.map((p,i)=>{const s=sus(p.id);return '<button class="item" type="button" data-who="'+i+'"><span class="no">'+String(i+1).padStart(2,'0')+'</span><span class="tx"><small>Жауап алу хаттамасы</small><b>'+s.full+', '+s.role+'</b></span></button>'}).join('')+'</div>'+
+   '<p class="hintline">Алты адамнан дүйсенбі күні жеке-жеке жауап алынды.</p>';
+}
+function vInt(){
+  const i=S.who,p=INT[i],s=sus(p.id);
+  return '<div class="row"><button class="ghost" data-go="ints" type="button">← Жауап алу</button><button class="ghost" data-go="docs" type="button">Материалдар</button></div>'+
+   '<div class="sheet typed"><div class="dochead"><div><div class="tag">ЖАУАП АЛУ ХАТТАМАСЫ</div><h2>'+s.full+'</h2><div>'+s.role+'</div></div><span class="stamp">ДҮЙСЕНБІ</span></div>'+
+   '<div class="qa">'+p.qa.map(x=>'<p class="t">Тергеуші: '+x[0]+'</p><p class="a">'+s.name+': '+x[1]+'</p>').join('')+'</div>'+
+   '<p class="t" style="color:var(--muted)">Хаттаманы оқып шықтым, сөзімнен дұрыс жазылған. Қолы: '+s.full+'</p>'+
+   '<label for="note"><h3>Менің жазбам</h3></label><textarea id="note" data-k="note">'+esc(S.notes['i'+i])+'</textarea>'+
+   '<div class="row"><button class="ghost" data-who="'+((i+5)%6)+'" type="button">← Алдыңғы</button><button class="ghost" data-who="'+((i+1)%6)+'" type="button">Келесі →</button></div></div>';
+}
+function vNote(){
+  return '<p class="hintline">Бұл сенің дәптерің. Белгілерді ойын тексермейді.</p>'+
+  SUS.map(s=>{const m=S.marks[s.id]||'';
+   return '<div class="sheet who '+(m==='out'?'out':m==='hot'?'hot':'')+'"><div><h2>'+s.full+'</h2><div class="n" style="font-size:13px;color:var(--muted)">'+s.role+'</div></div>'+
+   '<div class="seg" role="group" aria-label="Белгі">'+[['','Белгісіз'],['hot','Күдікті'],['out','Ақталды']].map(o=>'<button type="button" data-mark="'+s.id+'" data-v="'+o[0]+'" aria-pressed="'+(m===o[0])+'">'+o[1]+'</button>').join('')+'</div>'+
+   '<textarea data-k="pn" data-id="'+s.id+'" aria-label="'+s.name+' туралы жазба" style="min-height:56px">'+esc(S.notes['p'+s.id])+'</textarea></div>'}).join('')+
+  '<div class="sheet"><label for="memo"><h3>Болжам</h3></label><textarea id="memo" data-k="memo" style="min-height:140px">'+esc(S.memo)+'</textarea></div>';
+}
+function pickList(role,cur){
+  return '<div class="opts">'+SUS.map(s=>'<button type="button" data-pick="'+role+'" data-id="'+s.id+'" aria-pressed="'+(cur===s.id)+'">'+s.full+', '+s.role+'</button>').join('')+'</div>';
+}
+function vAcc(){
+  const n=nAns();
+  let h='<div class="sheet"><div class="dochead"><div><div class="tag">АЙЫПТАУ ҚОРЫТЫНДЫСЫ</div><h2>Кім жасады, кім ауыстырды?</h2></div><span class="stamp">ІС № 27-К</span></div>';
+  if(n<6)h+='<p>Айыптау үшін алты есептің бәріне жауап жаз. Қазір жазылғаны: <b>'+n+' / 6</b>.</p><button class="go" data-go="docs" type="button" style="align-self:flex-start">Материалдарға оралу</button>';
+  else h+='<h3>Жалған көшірмені жасаған</h3>'+pickList('m',S.pm)+'<h3>Экспонатты ауыстырған</h3>'+pickList('s',S.ps)+
+    '<button class="go" data-act="accuse" type="button" '+(S.pm&&S.ps?'':'disabled')+' style="align-self:flex-start">Айыптауды растау</button>';
+  if(S.msg)h+='<div class="fb" role="status"><b>Айыптау дәлелденбеді · −10 ұпай</b>'+S.msg+'</div>';
+  if(S.wrongAcc>=4)h+='<button class="ghost" data-act="giveup" type="button" style="align-self:flex-start">Шешімін көрсету</button>';
+  return h+'</div>';
+}
+const fin=(name,full,role,qa)=>'<div class="sheet typed"><div class="dochead"><div><div class="tag">СОҢҒЫ ЖАУАП АЛУ ХАТТАМАСЫ</div><h2>'+full+'</h2><div>'+role+'</div></div><span class="stamp">МОЙЫНДАУ</span></div><div class="qa">'+
+  qa.map(x=>'<p class="t">Тергеуші: '+x[0]+'</p><p class="a">'+name+': '+x[1]+'</p>').join('')+'</div></div>';
+const FINAL='<p class="hintline">Айғақтар көрсетілген соң екеуінен қайта жауап алынды.</p>'+
+fin('Жанар','Жанар Әбенова','реставратор',[
+ ['Сараптама нәтижелерін көрдіңіз. Сенбіде ваннаны қостыңыз ба?','Иә, қостым. Көшірмені мен жасадым. Жезді шеберханадағы табақтан кестім, алтын қабатын паспорттағыдай 1,97 г етіп жалаттым.'],
+ ['Не үшін?','Ақша үшін. Олжас сатып алушы тапқанын айтып, маған 5 миллион теңге ұсынды. Пәтердің несиесін төлей алмай жүр едім, келістім.'],
+ ['Көшірмені Олжасқа қашан бердіңіз?','Сенбіде 18:30-да шеберханадан шығып, жертөле баспалдағында қолына ұстаттым. 19:02-де қайта кірдім де, кешке дейін шықпадым: маған күдік түспесін дедім.'],
+ ['Түпнұсқаның қайда екенін білесіз бе?','Жоқ. Ауыстыруды да, сатуды да Олжас өзі істемек болған.']])+
+fin('Олжас','Олжас Нұрғалиев','техник-электрик',[
+ ['Жанар бәрін айтты. Сіз не дейсіз?','Мойындаймын. Экспонатты мен ауыстырдым.'],
+ ['Бәрі неден басталды?','Жазда бір жеке коллекционердің үйіне сигнализация орнаттым. Ол «Алтын барысқа» 40 миллион теңге беретінін айтты. Қарызым көп еді, көндім. Көшірме жасай алатын жалғыз адам Жанар болды.'],
+ ['Витринаны қалай аштыңыз?','Серік аралауға кеткенде посттан шам мен өрт сөндіргішті алдым. Стеаринмен құлыптың қалыбын алып, жертөледе дайындамадан кілт егедім. 21:14-те сигнализацияны өшіріп, барысты ауыстырдым. Оттек датчигі қалпына келсін деп витринаны көмірқышқыл газымен толтырдым.'],
+ ['Барқыттағы іздер қайдан шықты?','Қолғабымда кешкісін құйған электролит пен нашатырдың қалдығы қалған екен. Байқамаппын.'],
+ ['Түпнұсқа қайда?','Аккумулятор бөлмесінде, ескі аккумулятор қорабының ішінде. Сатып үлгермедім.']])+
+'<div class="sheet"><p>Түпнұсқа сол күні аккумулятор бөлмесінен табылып, музейге қайтарылды. Коллекционерге қатысты бөлек іс қозғалды.</p></div>';
+function vEnd(){
+  const el=Math.floor((S.end-S.start)/1000),sc=score();
+  const rank=!S.solved?'Іс басқа тергеушіге берілді':sc>=90?'Аса маңызды істер тергеушісі':sc>=70?'Аға тергеуші':sc>=50?'Тергеуші':'Тергеуші көмекшісі';
+  return '<h1>Іс сотқа жіберілді</h1><div class="sheet"><span class="verdict">ЖАСАҒАН: ЖАНАР · АУЫСТЫРҒАН: ОЛЖАС</span>'+
+   '<p>'+(S.name?'<b>'+esc(S.name)+'</b>: ':'')+'<b>'+rank+'</b>'+(el>LIMIT?'. Уақыттан '+fmt(el-LIMIT)+' асып кетті.':'.')+'</p>'+
+   '<div class="res"><div><small>Ұпай</small><span>'+sc+'</span></div><div><small>Уақыт</small><span>'+fmt(el)+'</span></div><div><small>Дұрыс есеп</small><span>'+nRight()+'/6</span></div></div>'+
+   '<p class="n" style="font-size:13px;color:var(--muted)">Қате айыптау: '+S.wrongAcc+' · алынған кеңес: '+S.hints.length+'</p></div>'+FINAL+
+   TASKS.map(i=>{const d=DOCS[i];return '<div class="sheet"><div class="dochead"><div><div class="tag">'+d.tag.toUpperCase()+'</div><h2>'+d.t+'</h2></div><span class="stamp" style="color:'+(right(i)?'var(--ok)':'var(--stamp)')+';border-color:currentColor">'+(right(i)?'ДҰРЫС':'ҚАТЕ')+'</span></div>'+
+    '<p>Сенің жауабың: <span class="pill">'+(has(i)?shown(i):'жоқ')+'</span></p><div class="sol">'+d.task.sol+'</div><div class="fb ok"><b>Қорытынды</b>'+d.task.concl+'</div></div>'}).join('')+
+   '<div class="sheet"><h3>Шын мәнінде не болды</h3>'+
+   '<p><b>Жанар</b> сенбі күні 14:10–15:40 аралығында шеберханадағы жезден құйылған көшірмеге алтын жалатты. Ол «сенбіде ваннаны қосқан жоқпын» деді, бірақ анализатор 336 мл хлор тіркеген, ал шеберханаға одан басқа ешкім кіре алмайды. Банкасындағы алтын хлориді де екі жұмысқа дәл жетерлік мөлшерде кеміген.</p>'+
+   '<p><b>Олжас</b> 20:40-та бос қалған күзет постынан шам мен өрт сөндіргішті алды, кілттің қалыбын жасады, 21:14-те сигнализацияны өшіріп, экспонатты ауыстырды. Барқытта оның қолғабынан нашатыр мен аккумулятор электролиті қалды. Ол постқа да, аккумулятор бөлмесіне де кірмедім деп жалған айтты.</p>'+
+   '<h3>Жалған іздер</h3><ul>'+
+   '<li>Ержан: зергер, алтын хлориді бар, сол күні музейге келген. Бірақ жезі басқа, реактиві бір ғана көшірмеге кеткен, 17:10-да шығып кеткен.</li>'+
+   '<li>Диас: гальваностегиямен айналысады. Бірақ 2 г реактив жетпейді, 19:05-те кеткен.</li>'+
+   '<li>Серік: шам да, өрт сөндіргіш те оның постынан. Бірақ ауыстыру кезінде сыртқы камерада тұр.</li>'+
+   '<li>Гүлнар: кілті бар, алибиі жоқ. Бірақ кілті бар адамға қалып керек емес, электролит пен нашатырға қолы жетпейді.</li>'+
+   '<li>Ресми көшірме: алтын қабаты бірдей 1,97 г, бірақ жезі Cu 60% және сейфте орнында тұр.</li></ul>'+
+   '<button class="go" data-act="again" type="button" style="align-self:flex-start">Қайта ойнау</button></div>';
+}
+const TAB={docs:'docs',doc:'docs',ints:'ints',int:'ints',note:'note',acc:'acc'};
+function render(){
+  tick();$('cnt').textContent=nAns()+'/6';
+  $('tabs').classList.toggle('on',!!TAB[S.view]);
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.go===TAB[S.view])));
+  app.innerHTML={intro:vIntro,docs:vDocs,doc:vDoc,ints:vInts,int:vInt,note:vNote,acc:vAcc,end:vEnd}[S.view]();
+}
+function go(v){S.view=v;window.scrollTo(0,0);render()}
+
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b||b.disabled||b.closest('#ref')||b.id==='openRef')return;
+  const d=b.dataset;
+  if(d.go)return go(d.go);
+  if(d.doc!==undefined){S.doc=+d.doc;return go('doc')}
+  if(d.who!==undefined){S.who=+d.who;return go('int')}
+  if(d.a!==undefined){S.ans[S.doc]=+d.a;return render()}
+  if(d.mark){S.marks[d.mark]=d.v;return render()}
+  if(d.pick){if(d.pick==='m')S.pm=d.id;else S.ps=d.id;return render()}
+  if(d.act==='start'){S.start=Date.now();return go('docs')}
+  if(d.act==='hint'){if(!S.hints.includes(S.doc))S.hints.push(S.doc);return render()}
+  if(d.act==='accuse'){
+    const k=(S.pm===MAKER?1:0)+(S.ps===SWAP?1:0);
+    if(k===2){S.solved=true;S.end=Date.now();return go('end')}
+    S.wrongAcc++;
+    S.msg='Прокурор айыптауды қабылдамады: дәлелдер тізбегінде қайшылық бар.'+(S.wrongAcc>=2?' Сенің 6 есебіңнің '+nRight()+'-і дұрыс.':'')+
+      (S.wrongAcc>=3?' Екі рөлдің '+k+'-і дұрыс көрсетілген. Қате есептер материалдар тізімінде «қайта тексер» деп белгіленді.':'');
+    return render();
+  }
+  if(d.act==='giveup'){S.end=Date.now();return go('end')}
+  if(d.act==='again'){const n=S.name;S=fresh();S.name=n;return go('intro')}
+});
+document.addEventListener('input',e=>{
+  const ds=e.target.dataset||{},k=ds.k;if(!k)return;
+  const v=e.target.value;
+  if(k==='ans'){S.ans[S.doc]=v.trim();$('cnt').textContent=nAns()+'/6'}
+  else if(k==='note')S.notes[(S.view==='doc'?'d'+S.doc:'i'+S.who)]=v;
+  else if(k==='pn')S.notes['p'+ds.id]=v;
+  else if(k==='memo')S.memo=v;
+  else if(k==='name')S.name=v.trim();
+});
+$('openRef').addEventListener('click',()=>{$('ref').classList.add('open');$('closeRef').focus()});
+$('closeRef').addEventListener('click',()=>$('ref').classList.remove('open'));
+$('ref').addEventListener('click',e=>{if(e.target.id==='ref')$('ref').classList.remove('open')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('ref').classList.remove('open')});
+
+function boot(d){if(d&&d.view&&d.ans)S=Object.assign(fresh(),d);render()}
+window.claude?.hot?.snapshot?.(()=>S);
+if(window.claude?.hot?.ready)window.claude.hot.ready(boot);else boot(window.claude?.hot?.data??{});
+</script>
+</body>
+</html>
